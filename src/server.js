@@ -104,7 +104,15 @@ if (process.env.NODE_ENV !== 'test') {
 // Serve uploaded assets
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-// Health Check
+// Root / Health Check
+app.get('/', (req, res) => {
+  res.json({
+    status: 'ok',
+    service: 'Enterprise HRMS API',
+    timestamp: new Date(),
+  });
+});
+
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'ok',
@@ -137,8 +145,13 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
-server.listen(PORT, () => {
-  console.log(`[HRMS Backend] Enterprise Server running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
-});
+// Only listen directly when running outside of Vercel serverless environment
+if (!process.env.VERCEL) {
+  server.listen(PORT, () => {
+    console.log(`[HRMS Backend] Enterprise Server running on port ${PORT} in ${process.env.NODE_ENV || 'development'} mode`);
+  });
+}
 
-module.exports = { app, server };
+module.exports = app;
+module.exports.app = app;
+module.exports.server = server;
