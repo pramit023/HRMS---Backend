@@ -32,8 +32,7 @@ const documentRoutes = require('./routes/documentRoutes');
 const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 
-// Connect to Database
-connectDB();
+
 
 const app = express();
 const server = http.createServer(app);
